@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+package audit;
+
+service AuditService {
+  rpc DumpSourceCode (DumpSourceCodeRequest) returns (stream DumpSourceCodeResponse) {}
+  rpc AnalyzeSourceCode (AnalyzeSourceCodeRequest) returns (stream AnalyzeSourceCodeResponse) {}
+  rpc WatchPullRequests (WatchPullRequestsRequest) returns (stream WatchPullRequestsResponse) {}
+  rpc InterruptProcess (InterruptProcessRequest) returns (InterruptProcessResponse) {}
+}
+
+message DumpSourceCodeRequest {
+  string id_work = 1;
+  string id_repository = 2;
+  string github_token = 3;
+}
+
+message DumpSourceCodeResponse {
+  string id_work = 1;
+  string id_repository = 2;
+  string process_status = 3;
+  optional string code_dump = 4;
+  optional string error_message = 5;
+}
+
+message AnalyzeSourceCodeRequest {
+  string id_work = 1;
+  string id_repository = 2;
+  string code_dump = 3;
+}
+
+message AnalyzeSourceCodeResponse {
+  string id_work = 1;
+  string id_repository = 2;
+  string process_status = 3;
+  optional string result = 4;
+  optional string error_message = 5;
+}
+
+message WatchPullRequestsRequest {
+  string id_work = 1;
+  string id_repository = 2;
+  string code_dump = 3;
+  string github_token = 4;
+}
+
+message WatchPullRequestsResponse {
+  string id_work = 1;
+  string id_repository = 2;
+  string process_status = 3;
+  optional string result = 4;
+  optional string error_message = 5;
+}
+
+message InterruptProcessRequest {
+  string id_work = 1;
+}
+
+message InterruptProcessResponse {
+  string id_work = 1;
+  bool success = 2;
+  optional string error_message = 3;
+}

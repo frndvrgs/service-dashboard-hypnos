@@ -3,3 +3,5 @@
 *_pb2_grpc.py
 venv
 .env
+**/__pycache__/
+**/*.py[cod]

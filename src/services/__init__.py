@@ -1,3 +1,4 @@
 from .dump_source_code_service import DumpSourceCodeService
 from .analyze_source_code_service import AnalyzeSourceCodeService
+from .analyze_pull_request_service import AnalyzePullRequestService
 from .watch_pull_requests_service import WatchPullRequestsService

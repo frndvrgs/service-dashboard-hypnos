@@ -1,18 +1,29 @@
 import grpc
-import logging
 from concurrent import futures
 from . import audit_pb2, audit_pb2_grpc
 from services import (
     DumpSourceCodeService,
     AnalyzeSourceCodeService,
     WatchPullRequestsService,
+    AnalyzePullRequestService,
 )
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+LLM_API_KEY = os.getenv("LLM_API_KEY")
+
+from . import audit_pb2 as audit__pb2
 
 
 class AuditServicer(audit_pb2_grpc.AuditServiceServicer):
     def __init__(self):
         self.dump_service = DumpSourceCodeService()
-        self.analyze_service = AnalyzeSourceCodeService()
+        self.analyze_source_code_service = AnalyzeSourceCodeService(api_key=LLM_API_KEY)
+        self.analyze_source_pull_request_service = AnalyzePullRequestService(
+            api_key=LLM_API_KEY
+        )
         self.watch_service = WatchPullRequestsService()
         self.active_processes = {}
 
@@ -27,12 +38,27 @@ class AuditServicer(audit_pb2_grpc.AuditServiceServicer):
             del self.active_processes[request.id_work]
 
     async def AnalyzeSourceCode(self, request, context):
-        self.active_processes[request.id_work] = self.analyze_service
+        self.active_processes[request.id_work] = self.analyze_source_code_service
         try:
-            async for response in self.analyze_service.process(
+            async for response in self.analyze_source_code_service.process(
                 request.id_work, request.id_repository, request.code_dump
             ):
                 yield audit_pb2.AnalyzeSourceCodeResponse(**response)
+        finally:
+            del self.active_processes[request.id_work]
+
+    async def AnalyzePullRequest(self, request, context):
+        self.active_processes[request.id_work] = (
+            self.analyze_source_pull_request_service
+        )
+        try:
+            async for response in self.analyze_source_pull_request_service.process(
+                request.id_work,
+                request.id_repository,
+                request.id_pull_request,
+                request.code_dump,
+            ):
+                yield audit_pb2.AnalyzePullRequestResponse(**response)
         finally:
             del self.active_processes[request.id_work]
 

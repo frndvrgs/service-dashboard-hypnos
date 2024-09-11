@@ -1,3 +1,9 @@
-grpcio==1.66.1
-grpcio-tools==1.66.1
-aiohttp==3.10.5
+grpcio
+grpcio-tools
+aiohttp
+python-dotenv
+langchain
+langchain-community
+langchain-anthropic
+anthropic
+black

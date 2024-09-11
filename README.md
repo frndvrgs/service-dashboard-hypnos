@@ -36,11 +36,12 @@ set CMS_WEBSOCKET_ENDPOINT=ws://127.0.0.1:20110/audit
 
 2. Run the main script:
 
-python main.py
+python src/main.py
 
 The gRPC server will start on port 50051.
 
-## Configuration
+## Formatting
 
-- Update the GitHub PAT in `src/audit_service.py`
-- Update the WebSocket URL in `src/audit_service.py` to point to your CMS server
+1. Run the black command:
+
+black src

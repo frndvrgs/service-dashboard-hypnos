@@ -2,6 +2,9 @@ import asyncio
 import logging
 import signal
 from core.server import serve
+from dotenv import load_dotenv
+
+load_dotenv()
 
 SERVICE_NAME = "service-dashboard-hypnos"
 GRPC_SERVER_HOST = "[::1]"

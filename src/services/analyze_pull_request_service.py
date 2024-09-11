@@ -8,7 +8,7 @@ from langchain_core.runnables import RunnablePassthrough
 from typing import Mapping, Any
 
 
-class AnalyzeSourceCodeService(Interruptible):
+class AnalyzePullRequestService(Interruptible):
     def __init__(self, api_key):
         super().__init__()
         self.chat_model = ChatAnthropic(
@@ -18,11 +18,12 @@ class AnalyzeSourceCodeService(Interruptible):
             # max_tokens_to_sample=4000
         )
 
-    async def process(self, id_work, id_repository, code_dump):
+    async def process(self, id_work, id_repository, id_pull_request, code_dump):
         try:
             yield {
                 "id_work": id_work,
                 "id_repository": id_repository,
+                "id_pull_request": id_pull_request,
                 "process_status": "started",
             }
 
@@ -31,6 +32,7 @@ class AnalyzeSourceCodeService(Interruptible):
             yield {
                 "id_work": id_work,
                 "id_repository": id_repository,
+                "id_pull_request": id_pull_request,
                 "process_status": "in_progress",
             }
 
@@ -93,6 +95,7 @@ class AnalyzeSourceCodeService(Interruptible):
             yield {
                 "id_work": id_work,
                 "id_repository": id_repository,
+                "id_pull_request": id_pull_request,
                 "process_status": "completed",
                 "result": analysis_result,
             }
@@ -101,13 +104,15 @@ class AnalyzeSourceCodeService(Interruptible):
             yield {
                 "id_work": id_work,
                 "id_repository": id_repository,
+                "id_pull_request": id_pull_request,
                 "process_status": "interrupted",
             }
         except Exception as e:
-            logging.error(f"Error in AnalyzeSourceCode: {str(e)}")
+            logging.error(f"Error in AnalyzePullRequest: {str(e)}")
             yield {
                 "id_work": id_work,
                 "id_repository": id_repository,
+                "id_pull_request": id_pull_request,
                 "process_status": "error",
                 "error_message": str(e),
             }

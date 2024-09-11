@@ -5,6 +5,7 @@ package audit;
 service AuditService {
   rpc DumpSourceCode (DumpSourceCodeRequest) returns (stream DumpSourceCodeResponse) {}
   rpc AnalyzeSourceCode (AnalyzeSourceCodeRequest) returns (stream AnalyzeSourceCodeResponse) {}
+  rpc AnalyzePullRequest (AnalyzePullRequestRequest) returns (stream AnalyzePullRequestResponse) {}
   rpc WatchPullRequests (WatchPullRequestsRequest) returns (stream WatchPullRequestsResponse) {}
   rpc InterruptProcess (InterruptProcessRequest) returns (InterruptProcessResponse) {}
 }
@@ -35,6 +36,22 @@ message AnalyzeSourceCodeResponse {
   string process_status = 3;
   optional string result = 4;
   optional string error_message = 5;
+}
+
+message AnalyzePullRequestRequest {
+  string id_work = 1;
+  string id_repository = 2;
+  string id_pull_request = 3;
+  string code_dump = 4;
+}
+
+message AnalyzePullRequestResponse {
+  string id_work = 1;
+  string id_repository = 2;
+  string id_pull_request = 3;
+  string process_status = 4;
+  optional string result = 5;
+  optional string error_message = 6;
 }
 
 message WatchPullRequestsRequest {
